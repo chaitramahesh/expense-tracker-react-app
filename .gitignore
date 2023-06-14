@@ -54,3 +54,255 @@ export default Card;
 // we have to set children and classNames etc. bcz it does not support everything by 
 // default as <div> does. it supports only those which we well ask them to support
 
+
+
+
+// using JS code instead of JSX
+  // or JSX code will be converted into following JS code behind the scenes.
+  // return (
+  //   React.createElement('div', {}, React.createElement("h2", {}, "Let's get started!"), React.createElement(Expenses, {expenses:expenses}))
+  // );
+
+  return (
+    <div>
+      <h2>Let's get started!</h2>
+      <Expenses expenses={expenses} />
+    </div>
+  );
+}
+
+
+
+
+
+import React, { useState } from "react";
+
+import ExpenseItem from "./ExpenseItem";
+import Card from "../UI/Card";
+import "./Expenses.css";
+import ExpenseFilter from "./ExpenseFilter";
+
+function Expenses(props) {
+  const [filteredYear, setFilteredYear] = useState("2020");
+
+  // // computed/derived  states/values
+  // let filterInfoText = '2019, 2021 & 2022';
+  // if(filteredYear === 2019){
+  //   filterInfoText = '2020, 2021 & 2022';
+  // }else if(filteredYear === 2021){
+  //   filterInfoText = '2019, 2020 & 2022';
+  // }else if(filteredYear === 2022){
+  //   filterInfoText = '2019, 2020 & 2021';
+  // }
+
+  const filterChangeHandler = (selectedYear) => {
+    setFilteredYear(selectedYear);
+  };
+
+  const filteredExpenses = props.expenses.filter(
+    (item) => item.date.getFullYear().toString() === filteredYear
+  );
+    // // conditional components method 1
+    // let expenseContent = <p>No Expenses Found.</p>
+    // if(filteredExpenses.length > 0){
+    //   expenseContent = filteredExpenses.map((expense) => (
+    //     <ExpenseItem
+    //       key={expense.id}
+    //       title={expense.title}
+    //       amount={expense.amount}
+    //       date={expense.date}
+    //     />
+    //   ));
+    // }
+
+  return (
+    <div>
+      <Card className="expenses">
+        <ExpenseFilter
+          selectedValue={filteredYear}
+          onChangeFilter={filterChangeHandler}
+        />
+        {/* // use of computed/derived  states/values
+        <p>Data for years {filterInfoText} is hidden.</p> */}
+
+            {/* use of conditional components method 1 */}
+          {/* {expenseContent} */}
+
+              {/* or conditional s method 2 */}
+
+          {/* {filteredExpenses.length === 0 ? (
+          <p>No Expenses Found.</p>
+        ) : (
+          filteredExpenses.map((expense) => (
+            <ExpenseItem
+              key={expense.id}
+              title={expense.title}
+              amount={expense.amount}
+              date={expense.date}
+            />
+          )) 
+        )} */}
+
+           {/* or conditional components method 2 */}
+
+        {filteredExpenses.length === 0 && <p>No Expenses Found.</p>}
+        {filteredExpenses.length > 0 &&
+          filteredExpenses.map((expense) => (
+            <ExpenseItem
+              key={expense.id}
+              title={expense.title}
+              amount={expense.amount}
+              date={expense.date}
+            />
+          ))}
+
+      </Card>
+    </div>
+  );
+}
+
+export default Expenses;
+
+
+
+
+
+import React, { useState } from "react";
+
+import "./ExpenseForm.css";
+
+const ExpenseForm = (props) => {
+  const [enteredTitle, setEnteredTitle] = useState("");
+  const [enteredAmount, setEnteredAmount] = useState("");
+  const [enteredDate, setEnteredDate] = useState("");
+
+  // // method of using single useStates()
+  // const [userInput, setUserInput] = useState({
+  //   enteredTitle: '',
+  //   enteredAmount: '',
+  //   enteredDate: ''
+  // })
+
+  const titleChangeHandler = (event) => {
+    setEnteredTitle(event.target.value);
+
+    // // method of using single useStates()
+    // setUserInput({
+    //   ...userInput,
+    //   enteredTitle: event.target.value
+    // })
+
+    // // updating state that depends on the previous state
+    //  setUserInput((prevState)=>{
+    //   return {...prevState, enteredTitle: event.target.value} ;
+    //  });
+  };
+
+  const amountChangeHandler = (event) => {
+    setEnteredAmount(event.target.value);
+
+    // // method of using single useStates()
+    // setUserInput({
+    //   ...userInput,
+    //   enteredAmount: event.target.value
+    // })
+
+    // // updating state that depends on the previous state
+    //  setUserInput((prevState)=>{
+    //   return {...prevState, enteredAmount: event.target.value} ;
+    //  });
+  };
+
+  const dateChangeHandler = (event) => {
+    setEnteredDate(event.target.value);
+
+    // // method of using single useStates()
+    // setUserInput({
+    //   ...userInput,
+    //   enteredDate: event.target.value
+    // })
+
+    // // updating state that depends on the previous state
+    //  setUserInput((prevState)=>{
+    //   return {...prevState, enteredDate: event.target.value} ;
+    //  });
+  };
+
+  // // shared handler function instead of 3 different handler functions above
+  // const inputChangeHandler = (identifier, value) => {
+  //   if (identifier === "title") {
+  //     setEnteredTitle(value);
+  //   } else if (identifier === "date") {
+  //     setEnteredDate(value);
+  //   } else {
+  //     setEnteredAmount(value);
+  //   }
+  // };
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+
+    const expenseData = {
+      title: enteredTitle,
+      amount: enteredAmount,
+      date: new Date(enteredDate),
+    };
+
+    props.onSaveExpenseData(expenseData);
+
+    setEnteredTitle("");
+    setEnteredAmount("");
+    setEnteredDate("");
+  };
+
+  return (
+    <form onSubmit={submitHandler}>
+      <div className="new-expense__controls">
+        <div className="new-expense__control">
+          <label>Title</label>
+          <input
+            type="text"
+            value={enteredTitle}
+            onChange={titleChangeHandler}
+            // // use of shared handler
+            // onChange={(event) =>
+            //   inputChangeHandler("title", event.target.value)
+            // }
+          />
+        </div>
+        <div className="new-expense__control">
+          <label>Amount</label>
+          <input
+            type="number"
+            min="0.01"
+            step="0.01"
+            value={enteredAmount}
+            onChange={amountChangeHandler}
+            // // use of shared handler
+            // onChange={(event) =>
+            //   inputChangeHandler("amount", event.target.value)
+            // }
+          />
+        </div>
+        <div className="new-expense__control">
+          <label>Date</label>
+          <input
+            type="date"
+            min="2019-01-01"
+            max="2022-12-31"
+            value={enteredDate}
+            onChange={dateChangeHandler}
+            //   // use of shared handler
+            // onChange={(event) =>
+            //   inputChangeHandler("date", event.target.value)
+            // }
+          />
+        </div>
+      </div>
+      <div className="new-expense__actions">
+        <button type="submit">Add Expense</button>
+      </div>
+    </form>
+  );
+};
+export default ExpenseForm;
