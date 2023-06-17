@@ -32,6 +32,7 @@ function App() {
   setExpenses((prevExpenses)=>{
    return [newExpense, ...prevExpenses]
   })
+
   }
 
   return (

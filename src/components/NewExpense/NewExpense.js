@@ -7,12 +7,20 @@ const NewExpense = (props) => {
   const [addExpenseForm, setAddExpenseForm] = useState(false);
 
   const onSaveExpenseDataHandler = (enteredExpenseData) => {
+    if (
+      enteredExpenseData.title === "" ||
+      enteredExpenseData.amount === "" ||
+      enteredExpenseData.date === new Date("")
+    ) {
+      alert("Please Add Expense");
+      return;
+    }
     const expenseData = {
       ...enteredExpenseData,
       id: Math.random().toString(),
     };
     props.onAddExpense(expenseData);
-    setAddExpenseForm(false)
+    setAddExpenseForm(false);
   };
 
   const newExpenseBtnHandler = () => {
@@ -26,11 +34,13 @@ const NewExpense = (props) => {
   return (
     <div className="new-expense">
       {!addExpenseForm && (
-        <button type='button' onClick={newExpenseBtnHandler}>Add New Expense</button>
+        <button type="button" onClick={newExpenseBtnHandler}>
+          Add New Expense
+        </button>
       )}
       {addExpenseForm && (
         <ExpenseForm
-          cancel={cancelBtnHandler}
+          onCancel={cancelBtnHandler}
           onSaveExpenseData={onSaveExpenseDataHandler}
         />
       )}
