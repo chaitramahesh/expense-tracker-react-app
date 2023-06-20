@@ -7,14 +7,14 @@ const NewExpense = (props) => {
   const [addExpenseForm, setAddExpenseForm] = useState(false);
 
   const onSaveExpenseDataHandler = (enteredExpenseData) => {
-    if (
-      enteredExpenseData.title === "" ||
-      enteredExpenseData.amount === "" ||
-      enteredExpenseData.date === new Date("")
-    ) {
-      alert("Please Add Expense");
-      return;
-    }
+    // if (
+    //   enteredExpenseData.title === "" ||
+    //   enteredExpenseData.amount === "" ||
+    //   enteredExpenseData.date === new Date("")
+    // ) {
+    //   alert("Please Add Expense");
+    //   return;
+    // }
     const expenseData = {
       ...enteredExpenseData,
       id: Math.random().toString(),
