@@ -21,21 +21,17 @@ const ExpenseForm = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    
+    if (enteredTitle === "" || enteredAmount === "" || enteredDate === "") {
+      alert("please add expense");
+      return;
+    }
 
     const expenseData = {
       title: enteredTitle,
       amount: +enteredAmount,
       date: new Date(enteredDate),
     };
-
-    if (
-      expenseData.title === "" ||
-      expenseData.amount === +"" ||
-      expenseData.date === new Date("")
-    ) {
-      alert("Please Add Expense");
-      return;
-    }
 
     props.onSaveExpenseData(expenseData);
 
